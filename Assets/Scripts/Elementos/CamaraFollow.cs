@@ -4,30 +4,56 @@ using UnityEngine;
 
 public class CamaraFollow : MonoBehaviour {
 
-	public GameObject follow;
-	public Vector2 minCamPos, maxCampos;
-	public float smoothTime = 2f;
+	public float smoothTime = 3f;
 
-	private Vector2 vel;
+    public Transform target;
+    public float tLX, tLY, bRX, bRY;
 
-	// Use this for initialization
-	void Awake () {
-		follow = GameObject.FindWithTag("Player");
-	}
+    Vector2 velocity; // necesario para el suavizado de cámara
 
-	// Update is called once per frame
-	void FixedUpdate()
+    void Awake()
+    {
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+
+
+	void Update()
 	{
-		float posX = Mathf.SmoothDamp(transform.position.x, follow.transform.position.x, ref vel.x, smoothTime);
-		float posY = Mathf.SmoothDamp(transform.position.y, follow.transform.position.y, ref vel.y, smoothTime);
-
+		float posX = Mathf.Round(
+            Mathf.SmoothDamp(transform.position.x,
+                target.position.x, ref velocity.x, smoothTime) * 100) / 100;
+        float posY = Mathf.Round(
+            Mathf.SmoothDamp(transform.position.y,
+                target.position.y, ref velocity.y, smoothTime) * 100) / 100;
 		transform.position = new Vector3(
-		Mathf.Clamp(posX, minCamPos.x, maxCampos.x),
-		Mathf.Clamp(posY, minCamPos.y, maxCampos.y),
-		transform.position.z
-		);
+			Mathf.Clamp(posX, tLX, bRX),
+			Mathf.Clamp(posY, bRY, tLY),
+			transform.position.z);
 
-		if (transform.position.y - 6f > follow.transform.position.y)
-			follow.SendMessage("SeCayo");
-	}
+		if (transform.position.y - 6f > target.transform.position.y)
+            target.SendMessage("SeCayo");
+    }
+
+    public void SetBound(GameObject map)
+    {
+        Tiled2Unity.TiledMap config = map.GetComponent<Tiled2Unity.TiledMap>();
+        float cameraSize = Camera.main.orthographicSize;
+        tLX = map.transform.position.x + cameraSize + 4;
+		tLY = map.transform.position.y - cameraSize ;
+		bRX = map.transform.position.x + config.NumTilesWide - cameraSize -4;
+		bRY = map.transform.position.y - config.NumTilesHigh + cameraSize;
+
+        FastMove();
+
+    }
+
+    public void FastMove()
+    {
+        transform.position = new Vector3(
+            target.position.x,
+            target.position.y,
+            transform.position.z
+        );
+    }
 }

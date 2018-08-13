@@ -48,7 +48,7 @@ public class Selector : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(opcion.gameObject.name);
+            SceneManager.LoadScene("Mundo");
         }
     }
 }

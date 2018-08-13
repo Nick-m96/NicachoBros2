@@ -7,14 +7,19 @@ public class EnemySimple : EnemyController {
 	// Use this for initialization
 	private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player")
-        {
-			if ((col.transform.position.y - 0.3f) > transform.position.y)
+		if (col.CompareTag("Player") || col.CompareTag("Weapon"))
+        { 
+			mostrarVida = true;
+			if (col.CompareTag("Player"))
 			{
-				col.SendMessage("EnemyJump");
-				Destroy(gameObject);
+				if ((col.transform.position.y - 0.3f) > transform.position.y)
+				{
+					col.SendMessage("EnemyJump");
+					Atacado();
+				}
+				else col.SendMessage("EnemyKnock", transform.position.x);
 			}
-			else col.SendMessage("EnemyKnock", transform.position.x);
+			else Atacado();
         }
     }
 }

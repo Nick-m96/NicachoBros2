@@ -238,6 +238,6 @@
 /Users/Shared/Unity/Plataformas 2D/Temp/bin/Debug/Unity.IvyParser.dll.mdb
 /Users/Shared/Unity/Plataformas 2D/obj/Debug/Assembly-CSharp.csprojResolveAssemblyReference.cache
 /Users/Shared/Unity/Plataformas 2D/obj/Debug/Assembly-CSharp.csproj.CoreCompileInputs.cache
+/Users/Shared/Unity/Plataformas 2D/obj/Debug/Assembly-CSharp.csproj.CopyComplete
 /Users/Shared/Unity/Plataformas 2D/obj/Debug/Assembly-CSharp.dll
 /Users/Shared/Unity/Plataformas 2D/obj/Debug/Assembly-CSharp.pdb
-/Users/Shared/Unity/Plataformas 2D/obj/Debug/Assembly-CSharp.csproj.CopyComplete

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlataformaDebil : MonoBehaviour {
 
 	private Rigidbody2D rgbd;
-	private PolygonCollider2D polic;
+	private EdgeCollider2D polic;
 	private Vector3 pos;
 
 	public float delayCaer = 0.25f;
@@ -14,7 +14,7 @@ public class PlataformaDebil : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		rgbd = GetComponent<Rigidbody2D>();
-		polic = GetComponent<PolygonCollider2D>();
+		polic = GetComponent<EdgeCollider2D>();
 		pos = transform.position;
 		rgbd.gravityScale = 1.5f;
 	}

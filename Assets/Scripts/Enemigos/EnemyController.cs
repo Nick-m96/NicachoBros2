@@ -8,14 +8,21 @@ public class EnemyController : MonoBehaviour {
     public float maxVel = 1.5f;
 	public playerController player;
 
+	[Tooltip("Vida Max")]
+	public int maxHp;
+	public int hp;
+	public bool mostrarVida;
+
 	private Vector3 start;
     private Vector3 final;
 	public Transform objetivo;
 
+	private SpriteRenderer spr;
 	private Rigidbody2D rg;
 
 	// Use this for initialization
 	void Start () {
+		spr = GetComponent<SpriteRenderer>();
 		rg = GetComponent<Rigidbody2D>();
         if (objetivo){
             objetivo.parent = null;
@@ -23,6 +30,7 @@ public class EnemyController : MonoBehaviour {
             final = objetivo.position;
         }
 		player = GameObject.Find("Player").GetComponent<playerController>();
+		hp = maxHp;
 	}
     
 	private void FixedUpdate()
@@ -51,16 +59,48 @@ public class EnemyController : MonoBehaviour {
 			transform.position = Vector3.MoveTowards(transform.position, objetivo.position, fixVel);
         
 			if (transform.position == objetivo.position){
-					if(objetivo.position == start){
-					objetivo.position = final;
-					transform.localScale = new Vector3(1f, 1f, 1f);     
-				}
-				else{
-					objetivo.position = start;
-					transform.localScale = new Vector3(-1f, 1f, 1f);            
-                }
+					if(objetivo.position == start) objetivo.position = final;
+				    else objetivo.position = start;
+
+				transform.localScale = new Vector3(-transform.localScale.x, 1f, 1f);            
+
             }
 		}
     }
+	private void OnTriggerEnter2D(Collider2D col)
+    {
+		if(col.CompareTag("Player") || col.CompareTag("Weapon")){
+			mostrarVida = true;
 
+			if (col.CompareTag("Player")) col.SendMessage("EnemyKnock", transform.position.x);
+			else Atacado();
+        }
+
+    }
+
+    public void Atacado()
+    {
+        if (--hp <= 0) Destroy(gameObject);
+        StartCoroutine("AnimAtacado");
+    }
+
+    IEnumerator AnimAtacado(){
+        spr.color = Color.red;
+        yield return new WaitForSeconds(.5f);
+        spr.color = Color.white;
+	}
+
+	private void OnGUI()
+	{
+		Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+        if(mostrarVida)
+		GUI.Box(
+			new Rect(
+				pos.x - 20,
+				Screen.height - pos.y,
+				40,
+				24
+			), hp + "/" + maxHp
+		);
+	}
 }

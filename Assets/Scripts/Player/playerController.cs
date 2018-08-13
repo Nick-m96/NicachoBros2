@@ -10,25 +10,44 @@ public class playerController : MonoBehaviour {
 	public float maxVel = 5f;
 	public bool enSuelo;
 	public float poderSalto = 120f;
-	public VidaController vida;
-	public Vector2 posIni;
-	public GameObject camara;
+    public Vector3 posIni;
+    public GameObject camara;
     
-	private Rigidbody2D rg;
-	private SpriteRenderer spriteRenderer;
-	private Animator animator;
+    private Rigidbody2D rg;
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
+    private CapsuleCollider2D weaponCol;
+
+
+	public VidaController vida;
+	private int dinero;
+
+    //Acciones-------//
 	private bool saltar;
 	private bool dobleSalto;
 	private bool movimiento = true;
 	private bool cargando;
-	public bool atacando;
 
-	// Use this for initialization
+	public bool atacando;
+    //---------------//
+
+	public GameObject initialMap;
+	public GameObject initialEnemyPreb;
+    
 	void Start () {
+		dinero = 0;
+
+		weaponCol = transform.GetChild(1).GetComponent<CapsuleCollider2D>();
+		weaponCol.enabled = false;
+
+        if(initialEnemyPreb) Instantiate(initialEnemyPreb);
+        //En caso de caer va al ultimo checkPoint
 		posIni = transform.position;
+
 		rg = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		Camera.main.GetComponent<CamaraFollow>().SetBound(initialMap);
         
 	}
 
@@ -41,27 +60,13 @@ public class playerController : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 	}
 
-	// Update is called once per frame
 	void Update () {
 		animator.SetFloat("Vel", Mathf.Abs(rg.velocity.x));
 		animator.SetBool("EnSuelo", enSuelo);
-		animator.SetBool("Atacando", atacando);
+        
+		Salto();
 
-		if (Input.GetKeyDown(KeyCode.Space)){
-			if(enSuelo){
-				saltar = true;
-				dobleSalto = true;          
-			}
-			else if (dobleSalto)
-            {
-                saltar = true;
-                dobleSalto = false;
-	        }   
-		}
-		if (Input.GetKeyDown(KeyCode.E) && enSuelo){
-
-			StartCoroutine(Atacar());
-		}
+		Ataque();
 	}
 
 	private void FixedUpdate()
@@ -99,7 +104,7 @@ public class playerController : MonoBehaviour {
 
 	private void SeCayo()
 	{
-
+		Debug.Log("cae");
 			transform.position = posIni;
 			vida.RestarVida();     
 	}
@@ -125,20 +130,45 @@ public class playerController : MonoBehaviour {
 		movimiento = true;
 		spriteRenderer.color = Color.white;
      }
-
-	public void NuevaPosInicial(Vector2 nuevaPosIni){
-		posIni = nuevaPosIni;
+    
+	public void SetPosIni(Vector3 pos){
+		posIni = pos;
 	}
 
-	IEnumerator Atacar(){
-		atacando = true;
+	void Salto(){
+		if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (enSuelo)
+            {
+                saltar = true;
+                dobleSalto = true;
+            }
+            else if (dobleSalto)
+            {
+                saltar = true;
+                dobleSalto = false;
+            }
+        }
+	}
 
-		if (atacando)
-			yield return new WaitForSeconds(.5f);
-        atacando = false;
-       }
+	void Ataque(){
+		AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        atacando = stateInfo.IsName("JugadorEspada");
 
-	public void SetPosIni(Vector2 pos){
-		posIni = pos;
+        //Ataque
+        if (Input.GetKeyDown(KeyCode.E) && !atacando)
+            animator.SetTrigger("Atacando");
+
+        if (atacando)
+        {
+            float playbackTime = stateInfo.normalizedTime;
+            if (playbackTime > 0.12 && playbackTime < 0.4) weaponCol.enabled = true;
+            else weaponCol.enabled = false;
+        }
+	}
+
+	public void SumarDinero(int valor){
+		dinero += valor;
+		Debug.Log("ahora tenes " + dinero);
 	}
 }
