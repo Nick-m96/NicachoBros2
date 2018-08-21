@@ -18,9 +18,7 @@ public class playerController : MonoBehaviour {
     private Animator animator;
     private CapsuleCollider2D weaponCol;
 
-
 	public VidaController vida;
-	private int dinero;
 
     //Acciones-------//
 	private bool saltar;
@@ -35,7 +33,6 @@ public class playerController : MonoBehaviour {
 	public GameObject initialEnemyPreb;
     
 	void Start () {
-		dinero = 0;
 
 		weaponCol = transform.GetChild(1).GetComponent<CapsuleCollider2D>();
 		weaponCol.enabled = false;
@@ -165,10 +162,5 @@ public class playerController : MonoBehaviour {
             if (playbackTime > 0.12 && playbackTime < 0.4) weaponCol.enabled = true;
             else weaponCol.enabled = false;
         }
-	}
-
-	public void SumarDinero(int valor){
-		dinero += valor;
-		Debug.Log("ahora tenes " + dinero);
 	}
 }

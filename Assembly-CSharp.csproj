@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Moneda.cs" />
     <Compile Include="Assets\Scripts\Elementos\AreaController.cs" />
     <Compile Include="Assets\Scripts\Elementos\CamaraFollow.cs" />
     <Compile Include="Assets\Scripts\Elementos\CortableController.cs" />
@@ -82,7 +81,9 @@
     <Compile Include="Assets\Scripts\Plataformas\PlataformaDebil.cs" />
     <Compile Include="Assets\Scripts\Player\Attack.cs" />
     <Compile Include="Assets\Scripts\Player\checkPiso.cs" />
+    <Compile Include="Assets\Scripts\Player\Moneda.cs" />
     <Compile Include="Assets\Scripts\Player\playerController.cs" />
+    <Compile Include="Assets\Scripts\Player\RupiasController.cs" />
     <Compile Include="Assets\Scripts\Player\VidaController.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\CircleObject.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\GameObjectExtensions.cs" />
